@@ -1,28 +1,56 @@
-const int MAX = 17;
-const int N = 1e5 + 5;
+class TreeAncestor {
+    vector<vector<int>> up;
+    int LOG = 0;
+    vector<int> depth;
+    vector<vector<int>> adj;
 
-int table[MAX][N];
-
-void build(int p[], int n) {
-    for (int i = 0; i < n; ++i)
-        table[0][i] = p[i];
-
-    for (int i = 1; i < MAX; ++i) {
-        for (int j = 0; j < n; ++j) {
-            if (table[i - 1][j] != -1)
-                table[i][j] = table[i - 1][table[i - 1][j]];
-            else
-                table[i][j] = -1;
+    void dfs(int node, int par) {
+        for (int child : adj[node]) {
+            if (child == par) continue;
+            depth[child] = depth[node] + 1;
+            dfs(child, node);
         }
     }
-}
 
-int query(int a, int k) {
-    for (int i = 0; i < MAX; ++i) {
-        if (k & (1 << i)) {
-            a = table[i][a];
-            if (a == -1) break;
+public:
+    TreeAncestor(int n, vector<int>& parent) {
+        while ((1 << LOG) <= n) LOG++;
+
+        depth = vector<int>(n);
+        up = vector<vector<int>>(n, vector<int>(LOG, -1));
+        adj = vector<vector<int>>(n);
+
+        int root = -1;
+
+        for (int i = 0; i < n; i++) {
+            if (parent[i] == -1) {
+                root = i;
+            } else {
+                adj[parent[i]].push_back(i);
+                adj[i].push_back(parent[i]);
+                up[i][0] = parent[i];
+            }
+        }
+        up[root][0] = -1;
+        dfs(root, -1);
+
+        for (int j = 1; j < LOG; j++) {
+            for (int i = 0; i < n; i++) {
+                if (up[i][j - 1] != -1)
+                    up[i][j] = up[up[i][j - 1]][j - 1];
+            }
         }
     }
-    return a;
-}
+
+    int getKthAncestor(int node, int k) {
+        if (depth[node] < k) return -1;
+
+        for (int i = 0; i < LOG; i++) {
+            if (k & (1 << i)) {
+                node = up[node][i];
+                if (node == -1) return -1;
+            }
+        }
+        return node;
+    }
+};
