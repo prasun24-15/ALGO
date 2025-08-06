@@ -13,7 +13,7 @@ public:
     }
     int findKthNumber(int n, int k) {
         long curr=1;
-        k-=1; // WE modfied meaning of k now k mean show many numbers we need to skip 
+        k-=1; // WE modfied meaning of k now k mean show how many numbers we need to skip 
         while(k>0)
         {
             long cnt=count(curr,curr+1,n);
