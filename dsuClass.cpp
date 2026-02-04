@@ -24,7 +24,7 @@ class DisjointSet{
             parent[ulp_v] = ulp_u;
             rank[ulp_u]++;
         }
-    void unionBySize(int u)
+    void unionBySize(int u,int v)
     {
         int ulp_u = findUparent(u);
         int ulp_v = findUparent(v);
