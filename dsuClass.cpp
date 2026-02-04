@@ -6,9 +6,10 @@ class DisjointSet{
         parent.resize(n+1);
         size.resize(n+1, 1);
         for(int i=0; i<=n; i++) parent[i] = i;
+    }
     int findUparent(int node) {
         if(node == parent[node]) return node;
-        return parent[node] = findUpaRent(parent[node]);
+        return parent[node] = findUparent(parent[node]);
     }
     void unionByRank(int u, int v) {
         int ulp_u = findUparent(u);
@@ -24,6 +25,7 @@ class DisjointSet{
             parent[ulp_v] = ulp_u;
             rank[ulp_u]++;
         }
+    }
     void unionBySize(int u,int v)
     {
         int ulp_u = findUparent(u);
@@ -38,4 +40,4 @@ class DisjointSet{
             size[ulp_u] += size[ulp_v];
         }
     }
-}};
+};
